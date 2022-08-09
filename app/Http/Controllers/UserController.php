@@ -18,8 +18,6 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        var_dump('get all users');
-        die();
         $query = User::query();
         $users = $query->get();
         $userId = $request->get('id') ?? null;
@@ -29,11 +27,11 @@ class UserController extends Controller
             if(!$users)
                 return response()->json(['Error' => "User with id ". $userId ." doesn't exist"], 404);
 
-        } else {
+        } //else {
 //            foreach ($users as $user) {
 //                $orders = $user->orders;
 //            }
-        }
+      //  }
 
         return response()->json([
             'data' => $users,
@@ -48,17 +46,13 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-
-        var_dump('register');
-        die();
         $data = $request->validate([
             'first_name' => 'required|string',
             'last_name' => 'required|string',
             'email' => 'required|string|unique:users,email',
             'password' => 'required|string|confirmed',
-            'phone_number' => 'string',
+            'phone_number' => 'required|string',
             'image' => 'string',
-            'user_role' => 'string'
         ]);
 
         try {
