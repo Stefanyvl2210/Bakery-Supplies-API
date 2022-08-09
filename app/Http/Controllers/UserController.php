@@ -58,6 +58,8 @@ class UserController extends Controller
         try {
             $data['password'] = Hash::make($data['password']);
             $user = User::create($data);
+            if($user)
+                $user->assignRole( 'user' );
 
         } catch (\Throwable $e) {
             return response($e, 500);
