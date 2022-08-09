@@ -50,7 +50,7 @@ class createRoles extends Command
         $this->line('------------- Setting Up Roles:');
 
         foreach ($roles as $role) {
-            $role = Role::updateOrCreate(['name' => $role, 'guard_name' => 'api']);
+            $role = Role::create(['name' => $role, 'guard_name' => 'api']);
             $this->info("Created " . $role->name . " Role");
         }
 
@@ -58,12 +58,13 @@ class createRoles extends Command
 
         $superAdminRole = Role::where('name', "admin")->first();
         foreach ($permissions as $perm_name) {
-            $permission = Permission::updateOrCreate([
+            $permission = Permission::create([
                 'name' => $perm_name,
                 'guard_name' => 'api'
             ]);
 
             $superAdminRole->givePermissionTo($permission);
+            $superAdminRole->syncPermissions($permission);
 
             $this->info("Created " . $permission->name . " Permission");
         }

@@ -29,5 +29,6 @@ class AdminSeeder extends Seeder {
         $user->email_verified_at = Carbon::now();
         $user->createToken( 'authToken' )->plainTextToken;
         $user->assignRole( 'admin' );
+        
     }
 }
