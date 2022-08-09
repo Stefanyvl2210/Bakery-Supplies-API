@@ -64,7 +64,6 @@ class createRoles extends Command
             ]);
 
             $superAdminRole->givePermissionTo($permission);
-            $superAdminRole->syncPermissions($permission);
 
             $this->info("Created " . $permission->name . " Permission");
         }
