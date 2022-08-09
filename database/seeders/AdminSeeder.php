@@ -16,8 +16,6 @@ class AdminSeeder extends Seeder {
      */
     public function run() {
 
-        $role = Role::create( ['name' => 'admin'] );
-
         $data = [
             'first_name'   => 'System',
             'last_name'    => 'Admin',
