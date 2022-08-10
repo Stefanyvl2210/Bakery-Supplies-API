@@ -27,11 +27,12 @@ class UserController extends Controller
             if(!$users)
                 return response()->json(['Error' => "User with id ". $userId ." doesn't exist"], 404);
 
-        } //else {
-//            foreach ($users as $user) {
-//                $orders = $user->orders;
-//            }
-      //  }
+            $users->getRoleNames();
+        } else {
+            foreach ($users as $user) {
+                $user->getRoleNames();
+            }
+        }
 
         return response()->json([
             'data' => $users,
