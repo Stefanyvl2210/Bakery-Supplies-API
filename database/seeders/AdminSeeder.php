@@ -16,8 +16,6 @@ class AdminSeeder extends Seeder {
      */
     public function run() {
 
-        $role = Role::create( ['name' => 'admin'] );
-
         $data = [
             'first_name'   => 'System',
             'last_name'    => 'Admin',
@@ -29,5 +27,7 @@ class AdminSeeder extends Seeder {
         $user->email_verified_at = Carbon::now();
         $user->createToken( 'authToken' )->plainTextToken;
         $user->assignRole( 'admin' );
+        $user->save();
+        
     }
 }
