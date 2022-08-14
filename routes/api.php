@@ -62,8 +62,8 @@ Route::group( ['middleware' => ['auth:sanctum']], function () {
          */
         Route::prefix( '/address' )->group( function () {
             Route::post( '/', [AddressController::class, 'create'] );
-            Route::get( '/', [ProductController::class, 'get_all'] );
-            Route::get( '/{address_id}', [ProductController::class, 'get'] );
+            Route::get( '/', [AddressController::class, 'get_all'] );
+            Route::get( '/{address_id}', [AddressController::class, 'get'] );
             Route::patch( '/{address_id}', [AddressController::class, 'update'] );
             Route::delete( '/{address_id}', [AddressController::class, 'delete'] );
         } );
