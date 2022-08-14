@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AddressController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -66,6 +67,14 @@ Route::group( ['middleware' => ['auth:sanctum']], function () {
             Route::patch( '/{address_id}', [AddressController::class, 'update'] );
             Route::delete( '/{address_id}', [AddressController::class, 'delete'] );
         } );
+
+        /*
+         * Orders
+         */
+        Route::prefix( '/orders' )->group( function () {
+            Route::post( '/', [OrderController::class, 'create'] );
+            Route::get( '/users/{user_id}', [OrderController::class, 'get_all_by_user'] );
+        } );
     } );
 
     /*
@@ -89,6 +98,16 @@ Route::group( ['middleware' => ['auth:sanctum']], function () {
             Route::post( '/', [ProductController::class, 'create_category'] );
             Route::patch( '/{category_id}', [ProductController::class, 'update_category'] );
             Route::delete( '/{category_id}', [ProductController::class, 'delete_category'] );
+        } );
+
+        /*
+         * Orders
+         */
+        Route::prefix( '/orders' )->group( function () {
+            Route::update( '/{order_id}', [OrderController::class, 'update'] );
+            Route::get( '/', [OrderController::class, 'get_all'] );
+            Route::patch( '/{order_id}', [OrderController::class, 'update'] );
+            Route::delete( '/{order_id}', [OrderController::class, 'delete'] );
         } );
     } );
 

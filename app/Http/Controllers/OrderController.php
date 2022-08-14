@@ -75,9 +75,12 @@ class OrderController extends Controller {
      * @param  Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function get_all_by_user() {
-        $user = auth()->user();
-        return Order::orderBy( 'created_at', 'desc' )->where( 'user_id', $user->id )->where( 'deleted_at', false )->get();
+    public function get_all_by_user( $user_id ) {
+        if ( is_null( $user_id ) ) {
+            $user_id = auth()->user()->id;
+        }
+
+        return Order::orderBy( 'created_at', 'desc' )->where( 'user_id', $user_id )->where( 'deleted_at', false )->get();
     }
 
     /*
@@ -85,23 +88,23 @@ class OrderController extends Controller {
      * @param  Request                         $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function get( $address_id ) {
-        $address          = Order::findOrFail( $address_id );
-        $address['users'] = $address->user;
-        return $address;
+    public function get( $order_id ) {
+        $order          = Order::findOrFail( $order_id );
+        $order['users'] = $order->user;
+        return $order;
     }
 
     /*
      * Delete Address
      */
-    public function delete( $address_id ) {
+    public function delete( $order_id ) {
 
-        $address = Order::findOrFail( $address_id );
+        $order = Order::findOrFail( $order_id );
 
-        if ( $address ) {
-            $address->deleted_at = Carbon::now();
-            $address->save();
-            return response()->json( ['message' => 'Address has been deleted', 'address' => $address], 200 );
+        if ( $order ) {
+            $order->deleted_at = Carbon::now();
+            $order->save();
+            return response()->json( ['message' => 'Order has been deleted', 'order' => $order], 200 );
         }
     }
 

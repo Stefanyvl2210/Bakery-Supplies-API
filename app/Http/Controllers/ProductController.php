@@ -25,6 +25,11 @@ class ProductController extends Controller {
             'categories'         => 'array|min:0',
         ] );
 
+        $categories = array();
+        foreach ( $data['categories'] as $category ) {
+            array_push( $categories, $category );
+        }
+
         try {
             $product = Product::create( $data );
 
