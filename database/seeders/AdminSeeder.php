@@ -6,7 +6,6 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
-use Spatie\Permission\Models\Role;
 
 class AdminSeeder extends Seeder {
     /**
@@ -23,11 +22,12 @@ class AdminSeeder extends Seeder {
             'password'     => Hash::make( '12345' ),
             'phone_number' => '000000',
         ];
-        $user = User::create( $data );
+        $user                    = User::create( $data );
         $user->email_verified_at = Carbon::now();
         $user->createToken( 'authToken' )->plainTextToken;
         $user->assignRole( 'admin' );
+        $user->assignRole( 'user' );
         $user->save();
-        
+
     }
 }

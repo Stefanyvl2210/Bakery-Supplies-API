@@ -1,8 +1,9 @@
 <?php
 
+use App\Http\Controllers\AddressController;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,12 +17,31 @@ use Illuminate\Support\Facades\Route;
 |
  */
 
-//Public Routes
+/*
+ * Public endpoints
+ */
+
 //Users
 Route::post( '/register', [UserController::class, 'store'] );
 Route::post( '/login', [AuthController::class, 'login'] );
 //Route::post('/forgot-password', [ForgotPasswordController::class, 'forgotPassword']);
 //Route::post('/reset-password', [ForgotPasswordController::class, 'resetPassword']);
+
+/*
+ * Products
+ */
+Route::prefix( '/product' )->group( function () {
+    Route::get( '/', [ProductController::class, 'show_products'] );
+    Route::get( '/{product_id}', [ProductController::class, 'get_product'] );
+} );
+
+/*
+ * Categories
+ */
+Route::prefix( '/category' )->group( function () {
+    Route::get( '/', [ProductController::class, 'show_categories'] );
+    Route::get( '/{category_id}', [ProductController::class, 'get_category'] );
+} );
 
 //Protected Routes
 Route::group( ['middleware' => ['auth:sanctum']], function () {
@@ -33,6 +53,22 @@ Route::group( ['middleware' => ['auth:sanctum']], function () {
     Route::post( '/verify-email', [AuthController::class, 'verify_email'] );
 
     /*
+     * User endpoints
+     */
+    Route::group( ['middleware' => ['role:user']], function () {
+        /*
+         * Address
+         */
+        Route::prefix( '/address' )->group( function () {
+            Route::post( '/', [AddressController::class, 'create'] );
+            Route::get( '/', [ProductController::class, 'get_all'] );
+            Route::get( '/{address_id}', [ProductController::class, 'get'] );
+            Route::patch( '/{address_id}', [AddressController::class, 'update'] );
+            Route::delete( '/{address_id}', [AddressController::class, 'delete'] );
+        } );
+    } );
+
+    /*
      * @ Admin Endpoints
      */
     Route::group( ['middleware' => ['role:admin']], function () {
@@ -41,22 +77,18 @@ Route::group( ['middleware' => ['auth:sanctum']], function () {
          * Products
          */
         Route::prefix( '/product' )->group( function () {
-            Route::get( '/', [ProductController::class, 'show_products'] );
-            Route::get('/{product_id}', [ProductController::class, 'get_product']);
-            Route::post('/', [ProductController::class, 'store']);
-            Route::patch('/{product_id}', [ProductController::class, 'update_product']);
-            Route::delete('/{product_id}', [ProductController::class, 'delete_product']);
+            Route::post( '/', [ProductController::class, 'store'] );
+            Route::patch( '/{product_id}', [ProductController::class, 'update_product'] );
+            Route::delete( '/{product_id}', [ProductController::class, 'delete_product'] );
         } );
 
         /*
-        * Categories
-        */
+         * Categories
+         */
         Route::prefix( '/category' )->group( function () {
-            Route::get( '/', [ProductController::class, 'show_categories'] );
-            Route::get('/{category_id}', [ProductController::class, 'get_category']);
-            Route::post('/', [ProductController::class, 'create_category']);
-            Route::patch('/{category_id}', [ProductController::class, 'update_category']);
-            Route::delete('/{category_id}', [ProductController::class, 'delete_category']);
+            Route::post( '/', [ProductController::class, 'create_category'] );
+            Route::patch( '/{category_id}', [ProductController::class, 'update_category'] );
+            Route::delete( '/{category_id}', [ProductController::class, 'delete_category'] );
         } );
     } );
 
