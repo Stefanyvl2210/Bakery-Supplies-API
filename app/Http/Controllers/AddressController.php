@@ -21,7 +21,7 @@ class AddressController extends Controller {
         ] );
 
         try {
-            if ( !$data['user_id'] ) {
+            if ( empty( $data['user_id'] ) ) {
                 $data['user_id'] = auth()->user()->id;
             }
 

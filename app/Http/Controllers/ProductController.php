@@ -22,7 +22,6 @@ class ProductController extends Controller {
             'description'        => 'string',
             'price'              => 'required|numeric',
             'quantity_avalaible' => 'numeric',
-            'image'              => 'string',
             'categories'         => 'numeric|array',
         ] );
 

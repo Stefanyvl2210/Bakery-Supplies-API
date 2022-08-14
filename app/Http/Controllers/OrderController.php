@@ -17,7 +17,11 @@ class OrderController extends Controller {
     public function create( Request $request ) {
 
         $data = $request->validate( [
-            'address' => 'required|string',
+            'address'       => 'required|string',
+            'delivery_time' => 'required',
+            'taxes'         => 'required',
+            'total'         => 'required',
+
         ] );
 
         try {
