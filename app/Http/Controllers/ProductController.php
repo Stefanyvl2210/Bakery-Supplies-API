@@ -21,12 +21,14 @@ class ProductController extends Controller {
             'name'               => 'required|string',
             'description'        => 'string',
             'price'              => 'required|numeric',
-            'quantity_avalaible' => 'numeric',
-            'categories'         => 'numeric|array',
+            'quantity_available' => 'numeric',
+            'categories'         => 'numeric|array|min:0',
         ] );
 
+        return $data;
+
         try {
-            $product = Product::create( $data );
+            //$product = Product::create( $data );
 
             /*
              * Assign categories
@@ -36,7 +38,8 @@ class ProductController extends Controller {
                 foreach ( $data['categories'] as $category ) {
                     array_push( $categories, $category );
                 }
-                $product->categories()->sync( $categories );
+                return $categories;
+                //$product->categories()->sync( $categories );
             }
 
         } catch ( \Throwable $e ) {
@@ -112,7 +115,7 @@ class ProductController extends Controller {
             'name'               => 'required|string',
             'description'        => 'string',
             'price'              => 'required|numeric',
-            'quantity_avalaible' => 'numeric',
+            'quantity_available' => 'numeric',
             'image'              => 'string',
             'categories'         => 'numeric|array',
         ] );

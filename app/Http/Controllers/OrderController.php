@@ -17,15 +17,17 @@ class OrderController extends Controller {
     public function create( Request $request ) {
 
         $data = $request->validate( [
-            'address'       => 'required|string',
-            'delivery_time' => 'required',
-            'taxes'         => 'required',
-            'total'         => 'required',
-
+            'address_id'        => 'required|numeric',
+            'estimate_delivery' => 'required',
+            'taxes'             => 'required|numeric',
+            'total'             => 'required|numeric',
+            'delivery_type'     => 'required|string',
+            'is_guest'          => 'required|boolean',
+            'status'            => 'required',
         ] );
 
         try {
-            if ( !$data['user_id'] ) {
+            if ( empty( $data['user_id'] ) ) {
                 $data['user_id'] = auth()->user()->id;
             }
 
@@ -34,7 +36,7 @@ class OrderController extends Controller {
             return response( $e, 500 );
         }
 
-        return response()->json( ['message' => 'Address has been attached to user', 'address' => $address], 200 );
+        return response()->json( ['message' => 'Order has been generated', 'address' => $address], 200 );
     }
 
     /**
@@ -42,19 +44,21 @@ class OrderController extends Controller {
      * @param  Request                         $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update( Request $request, $address_id ) {
+    public function update( Request $request, $order_id ) {
 
         $data = $request->validate( [
-            'address' => 'required|string',
+            'delivery_time'     => 'required|string',
+            'status'            => 'required',
+            'estimate_delivery' => 'nullable',
         ] );
 
-        $address = Order::findOrFail( $address_id );
+        $order = Order::findOrFail( $order_id );
 
-        if ( $address ) {
-            $address->update( $data );
+        if ( $order ) {
+            $order->update( $data );
         }
 
-        return response()->json( ['message' => 'Address has been updated', 'address' => $address], 200 );
+        return response()->json( ['message' => 'Order has been updated', 'order' => $order], 200 );
     }
 
     /*
@@ -63,6 +67,15 @@ class OrderController extends Controller {
      * @return \Illuminate\Http\JsonResponse
      */
     public function get_all() {
+        return Order::all();
+    }
+
+    /*
+     *
+     * @param  Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function get_all_by_user() {
         $user = auth()->user();
         return Order::orderBy( 'created_at', 'desc' )->where( 'user_id', $user->id )->where( 'deleted_at', false )->get();
     }
