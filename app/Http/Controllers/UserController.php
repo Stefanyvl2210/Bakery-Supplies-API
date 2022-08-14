@@ -27,10 +27,10 @@ class UserController extends Controller
             if(!$users)
                 return response()->json(['Error' => "User with id ". $userId ." doesn't exist"], 404);
 
-            $users->getRoleNames();
+            $users->main_role = $users->getRoleNames()[0];
         } else {
             foreach ($users as $user) {
-                $user->getRoleNames();
+                $user->main_role = $user->getRoleNames()[0];
             }
         }
 
