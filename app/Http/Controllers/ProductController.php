@@ -28,7 +28,7 @@ class ProductController extends Controller {
         return $data;
 
         try {
-            //$product = Product::create( $data );
+            $product = Product::create( $data );
 
             /*
              * Assign categories
@@ -39,7 +39,7 @@ class ProductController extends Controller {
                     array_push( $categories, $category );
                 }
                 return $categories;
-                //$product->categories()->sync( $categories );
+                $product->categories()->sync( $categories );
             }
 
         } catch ( \Throwable $e ) {
