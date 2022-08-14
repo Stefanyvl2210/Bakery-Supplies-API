@@ -52,7 +52,7 @@ class AuthController extends Controller
         $user = auth()->user();
 
         if(!Hash::check($code, $user->verification_code))
-            return response()->json(['Error' => 'Invalid Code']);
+            return response()->json(['Error' => 'Invalid Code'], 401);
 
         $user->email_verified_at = Carbon::now();
         $user->verification_code = null;
