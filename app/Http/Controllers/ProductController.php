@@ -36,7 +36,6 @@ class ProductController extends Controller {
                 foreach ( $data['categories'] as $category ) {
                     array_push( $categories, $category );
                 }
-                return $categories;
                 $product->categories()->sync( $categories );
             }
 
