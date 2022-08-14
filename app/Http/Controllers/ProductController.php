@@ -25,8 +25,6 @@ class ProductController extends Controller {
             'categories'         => 'array|min:0',
         ] );
 
-        return $request['categories'];
-
         try {
             $product = Product::create( $data );
 
