@@ -22,10 +22,10 @@ class ProductController extends Controller {
             'description'        => 'string',
             'price'              => 'required|numeric',
             'quantity_available' => 'numeric',
-            'categories'         => 'numeric|array|min:0',
+            'categories'         => 'array|min:0',
         ] );
 
-        return $data;
+        return $request['categories'];
 
         try {
             $product = Product::create( $data );
@@ -117,7 +117,7 @@ class ProductController extends Controller {
             'price'              => 'required|numeric',
             'quantity_available' => 'numeric',
             'image'              => 'string',
-            'categories'         => 'numeric|array',
+            'categories'         => 'array|min:0',
         ] );
 
         $product = Product::findOrFail( $product_id );
