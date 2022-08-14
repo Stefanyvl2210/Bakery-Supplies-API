@@ -26,7 +26,7 @@ class AuthController extends Controller
                 'Error' => 'Bad Credentials'
             ],401);
         }
-
+        $user->main_role = $user->getRoleNames()[0];
         $token = $user->createToken('myapptoken')->plainTextToken;
 
         return response()->json([
