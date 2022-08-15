@@ -41,7 +41,7 @@ Route::prefix( '/product' )->group( function () {
  */
 Route::prefix( '/category' )->group( function () {
     Route::get( '/', [ProductController::class, 'show_categories'] );
-    Route::get( '/{category_id}', [ProductController::class, 'get_category'] );
+    Route::get( '/{category_slug}', [ProductController::class, 'get_category'] );
 } );
 
 //Protected Routes
