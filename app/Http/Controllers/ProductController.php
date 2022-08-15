@@ -22,13 +22,8 @@ class ProductController extends Controller {
             'description'        => 'string',
             'price'              => 'required|numeric',
             'quantity_available' => 'numeric',
-            'categories'         => 'array|min:0',
+            'categories'         => 'string',
         ] );
-
-        $categories = array();
-        foreach ( $data['categories'] as $category ) {
-            array_push( $categories, $category );
-        }
 
         try {
             $product = Product::create( $data );
@@ -37,11 +32,14 @@ class ProductController extends Controller {
              * Assign categories
              */
             if ( $request->categories ) {
-                $categories = array();
-                foreach ( $data['categories'] as $category ) {
-                    array_push( $categories, $category );
+                $categories = json_decode( $data['categories'] );
+                if ( count( $categories ) > 0 ) {
+                    foreach ( $data['categories'] as $category ) {
+                        array_push( $categories, $category );
+                    }
+                    $product->categories()->sync( $categories );
                 }
-                $product->categories()->sync( $categories );
+
             }
 
         } catch ( \Throwable $e ) {
