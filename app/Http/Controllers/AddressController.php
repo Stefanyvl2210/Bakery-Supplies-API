@@ -60,7 +60,7 @@ class AddressController extends Controller {
      */
     public function get_all() {
         $user = auth()->user();
-        return Address::orderBy( 'created_at', 'desc' )->where( 'user_id', $user->id )->where( 'deleted_at', false )->get();
+        return Address::orderBy( 'created_at', 'desc' )->where( 'user_id', $user->id )->where( 'deleted_at', null )->get();
     }
 
     /*

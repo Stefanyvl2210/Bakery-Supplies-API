@@ -77,7 +77,7 @@ class ProductController extends Controller {
      * Get all products
      */
     public function show_products( Request $request ) {
-        return Product::orderBy( 'created_at', 'desc' )->where( 'deleted_at', false )->get();
+        return Product::orderBy( 'created_at', 'desc' )->where( 'deleted_at', null )->get();
     }
 
     /*

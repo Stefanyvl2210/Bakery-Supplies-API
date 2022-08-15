@@ -80,7 +80,7 @@ class OrderController extends Controller {
             $user_id = auth()->user()->id;
         }
 
-        return Order::orderBy( 'created_at', 'desc' )->where( 'user_id', $user_id )->where( 'deleted_at', false )->get();
+        return Order::orderBy( 'created_at', 'desc' )->where( 'user_id', $user_id )->where( 'deleted_at', null )->get();
     }
 
     /*
