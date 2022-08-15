@@ -24,6 +24,7 @@ class OrderController extends Controller {
             'delivery_type'     => 'required|string',
             'is_guest'          => 'required|boolean',
             'status'            => 'required',
+            'products'          => 'string|required',
         ] );
 
         try {
@@ -31,12 +32,26 @@ class OrderController extends Controller {
                 $data['user_id'] = auth()->user()->id;
             }
 
-            $address = Order::create( $data );
+            $order = Order::create( $data );
+
+            /*
+             * Assign products
+             */
+            if ( $request->products ) {
+                $products = json_decode( $data['products'] );
+                if ( count( $products ) > 0 ) {
+                    foreach ( $data['products'] as $product ) {
+                        array_push( $products, $product );
+                    }
+                    $product->categories()->sync( $products );
+                }
+            }
+
         } catch ( \Throwable $e ) {
             return response( $e, 500 );
         }
 
-        return response()->json( ['message' => 'Order has been generated', 'address' => $address], 200 );
+        return response()->json( ['message' => 'Order has been generated', 'order' => $order], 200 );
     }
 
     /**
