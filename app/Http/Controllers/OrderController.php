@@ -39,11 +39,12 @@ class OrderController extends Controller {
              */
             if ( $request->products ) {
                 $products = json_decode( $data['products'] );
+                $array    = [];
                 if ( count( $products ) > 0 ) {
-                    foreach ( $data['products'] as $product ) {
-                        array_push( $products, $product );
+                    foreach ( $products as $product ) {
+                        array_push( $array, $product );
                     }
-                    $product->categories()->sync( $products );
+                    $product->categories()->sync( $array );
                 }
             }
 
