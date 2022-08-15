@@ -87,7 +87,7 @@ Route::group( ['middleware' => ['auth:sanctum']], function () {
          */
         Route::prefix( '/product' )->group( function () {
             Route::post( '/', [ProductController::class, 'store'] );
-            Route::patch( '/{product_id}', [ProductController::class, 'update_product'] );
+            Route::patch( '/{product_id}', [ProductController::class, 'update'] );
             Route::delete( '/{product_id}', [ProductController::class, 'delete_product'] );
         } );
 
@@ -109,6 +109,15 @@ Route::group( ['middleware' => ['auth:sanctum']], function () {
             Route::patch( '/{order_id}', [OrderController::class, 'update'] );
             Route::delete( '/{order_id}', [OrderController::class, 'delete'] );
         } );
+
+        /*
+         * Logs
+         */
+        Route::prefix( '/logs' )->group( function () {
+            Route::get( '/', [UserController::class, 'get_logs'] );
+            Route::get( '/{user_id}', [UserController::class, 'get_logs_by_user'] );
+        } );
+
     } );
 
 } );

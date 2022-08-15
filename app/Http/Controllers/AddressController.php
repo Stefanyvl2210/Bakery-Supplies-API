@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Address;
+use App\Models\UserLog;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -30,6 +31,11 @@ class AddressController extends Controller {
             return response( $e, 500 );
         }
 
+        /*
+         * Log Address
+         */
+        UserLog::create( ['user_id' => auth()->user()->id, 'action' => 'create_address', 'userlog_previous_id' => UserLog::orderBy( 'created_at', 'desc' )->where( 'user_id', auth()->user()->id )->first() ? UserLog::orderBy( 'created_at', 'desc' )->where( 'user_id', auth()->user()->id )->first()->id : null] );
+
         return response()->json( ['message' => 'Address has been attached to user', 'address' => $address], 200 );
     }
 
@@ -50,6 +56,10 @@ class AddressController extends Controller {
             $address->update( $data );
         }
 
+        /*
+         * Log Address
+         */
+        UserLog::create( ['user_id' => auth()->user()->id, 'action' => 'update_address', 'userlog_previous_id' => UserLog::orderBy( 'created_at', 'desc' )->where( 'user_id', auth()->user()->id )->first() ? UserLog::orderBy( 'created_at', 'desc' )->where( 'user_id', auth()->user()->id )->first()->id : null] );
         return response()->json( ['message' => 'Address has been updated', 'address' => $address], 200 );
     }
 
@@ -84,6 +94,12 @@ class AddressController extends Controller {
         if ( $address ) {
             $address->deleted_at = Carbon::now();
             $address->save();
+
+            /*
+             * Log Address
+             */
+            UserLog::create( ['user_id' => auth()->user()->id, 'action' => 'delete_address', 'userlog_previous_id' => UserLog::orderBy( 'created_at', 'desc' )->where( 'user_id', auth()->user()->id )->first() ? UserLog::orderBy( 'created_at', 'desc' )->where( 'user_id', auth()->user()->id )->first()->id : null] );
+
             return response()->json( ['message' => 'Address has been deleted', 'address' => $address], 200 );
         }
     }

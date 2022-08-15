@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
+use App\Models\UserLog;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -52,6 +53,13 @@ class OrderController extends Controller {
             return response( $e, 500 );
         }
 
+        /*
+         * Log Create Order
+         */
+        if ( auth()->user() ) {
+            UserLog::create( ['user_id' => auth()->user()->id, 'action' => 'create_order', 'userlog_previous_id' => UserLog::orderBy( 'created_at', 'desc' )->where( 'user_id', auth()->user()->id )->first() ? UserLog::orderBy( 'created_at', 'desc' )->where( 'user_id', auth()->user()->id )->first()->id : null] );
+        }
+
         return response()->json( ['message' => 'Order has been generated', 'order' => $order], 200 );
     }
 
@@ -72,6 +80,13 @@ class OrderController extends Controller {
 
         if ( $order ) {
             $order->update( $data );
+        }
+
+        /*
+         * Log Update Order
+         */
+        if ( auth()->user() ) {
+            UserLog::create( ['user_id' => auth()->user()->id, 'action' => 'update_order_' . $order_id, 'userlog_previous_id' => UserLog::orderBy( 'created_at', 'desc' )->where( 'user_id', auth()->user()->id )->first() ? UserLog::orderBy( 'created_at', 'desc' )->where( 'user_id', auth()->user()->id )->first()->id : null] );
         }
 
         return response()->json( ['message' => 'Order has been updated', 'order' => $order], 200 );

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use App\Models\ProductCategory;
+use App\Models\UserLog;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -91,6 +92,14 @@ class ProductController extends Controller {
     public function get_product( $product_id ) {
         $product               = Product::findOrFail( $product_id );
         $product['categories'] = $product->categories;
+
+        /*
+         * Log Address
+         */
+        if ( auth()->user() ) {
+            UserLog::create( ['user_id' => auth()->user()->id, 'action' => 'get_product_' . $product_id, 'userlog_previous_id' => UserLog::orderBy( 'created_at', 'desc' )->where( 'user_id', auth()->user()->id )->first() ? UserLog::orderBy( 'created_at', 'desc' )->where( 'user_id', auth()->user()->id )->first()->id : null] );
+        }
+
         return $product;
     }
 
@@ -101,15 +110,27 @@ class ProductController extends Controller {
         $category = ProductCategory::where( 'slug', $category_slug )->first();
         if ( $category ) {
             $category['products'] = $category->products;
+
+            /*
+             * Log category
+             */
+            if ( auth()->user() ) {
+                UserLog::create( ['user_id' => auth()->user()->id, 'action' => 'get_category_' . $category->id, 'userlog_previous_id' => UserLog::orderBy( 'created_at', 'desc' )->where( 'user_id', auth()->user()->id )->first() ? UserLog::orderBy( 'created_at', 'desc' )->where( 'user_id', auth()->user()->id )->first()->id : null] );
+            }
+
             return $category;
         }
         return response()->json( ['message' => 'Product Category not found', 'category' => $category], 400 );
     }
 
-    /*
-     * Update Product
+    /**
+     * Update product.
+     *
+     * @param  \Illuminate\Http\Request    $request
+     * @param  string                      $product_id
+     * @return \Illuminate\Http\Response
      */
-    public function update_product( Request $request, $product_id ) {
+    public function update( Request $request, $product_id ) {
 
         $data = $request->validate( [
             'name'               => 'required|string',
@@ -173,6 +194,14 @@ class ProductController extends Controller {
         if ( $product ) {
             $product->deleted_at = Carbon::now();
             $product->save();
+
+            /*
+             * Log delete product
+             */
+            if ( auth()->user() ) {
+                UserLog::create( ['user_id' => auth()->user()->id, 'action' => 'delete_product_' . $product_id->id, 'userlog_previous_id' => UserLog::orderBy( 'created_at', 'desc' )->where( 'user_id', auth()->user()->id )->first() ? UserLog::orderBy( 'created_at', 'desc' )->where( 'user_id', auth()->user()->id )->first()->id : null] );
+            }
+
             return response()->json( ['message' => 'Product has been deleted', 'product' => $product], 200 );
         }
     }
@@ -185,6 +214,14 @@ class ProductController extends Controller {
         $category = ProductCategory::findOrFail( $category_id );
 
         if ( $category ) {
+
+            /*
+             * Log delete category
+             */
+            if ( auth()->user() ) {
+                UserLog::create( ['user_id' => auth()->user()->id, 'action' => 'delete_category_' . $category->id, 'userlog_previous_id' => UserLog::orderBy( 'created_at', 'desc' )->where( 'user_id', auth()->user()->id )->first() ? UserLog::orderBy( 'created_at', 'desc' )->where( 'user_id', auth()->user()->id )->first()->id : null] );
+            }
+
             $category->delete();
             return response()->json( ['message' => 'Product Category has been deleted', 'category' => $category], 200 );
         }

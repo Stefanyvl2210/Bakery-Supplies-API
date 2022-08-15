@@ -59,4 +59,11 @@ class User extends Authenticatable {
     public function addresses() {
         return $this->hasMany( Address::class );
     }
+
+    /*
+     * Userlogs
+     */
+    public function logs() {
+        return $this->hasMany( UserLog::class );
+    }
 }
