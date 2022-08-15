@@ -39,7 +39,6 @@ class ProductController extends Controller {
                     }
                     $product->categories()->sync( $categories );
                 }
-
             }
 
         } catch ( \Throwable $e ) {
@@ -116,8 +115,7 @@ class ProductController extends Controller {
             'description'        => 'string',
             'price'              => 'required|numeric',
             'quantity_available' => 'numeric',
-            'image'              => 'string',
-            'categories'         => 'array|min:0',
+            'categories'         => 'string',
         ] );
 
         $product = Product::findOrFail( $product_id );
@@ -129,11 +127,13 @@ class ProductController extends Controller {
              * Assign categories
              */
             if ( $request->categories ) {
-                $categories = array();
-                foreach ( $data['categories'] as $category ) {
-                    array_push( $categories, $category );
+                $categories = json_decode( $data['categories'] );
+                if ( count( $categories ) > 0 ) {
+                    foreach ( $data['categories'] as $category ) {
+                        array_push( $categories, $category );
+                    }
+                    $product->categories()->sync( $categories );
                 }
-                $product->categories()->sync( $categories );
             }
 
             $product->save();
