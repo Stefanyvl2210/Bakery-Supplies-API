@@ -32,12 +32,13 @@ class ProductController extends Controller {
              * Assign categories
              */
             if ( $request->categories ) {
+                $array      = [];
                 $categories = json_decode( $data['categories'] );
                 if ( count( $categories ) > 0 ) {
-                    foreach ( $data['categories'] as $category ) {
-                        array_push( $categories, $category );
+                    foreach ( $categories as $category ) {
+                        array_push( $array, $category );
                     }
-                    $product->categories()->sync( $categories );
+                    $product->categories()->sync( $array );
                 }
             }
 
@@ -127,12 +128,13 @@ class ProductController extends Controller {
              * Assign categories
              */
             if ( $request->categories ) {
+                $array      = [];
                 $categories = json_decode( $data['categories'] );
                 if ( count( $categories ) > 0 ) {
-                    foreach ( $data['categories'] as $category ) {
-                        array_push( $categories, $category );
+                    foreach ( $categories as $category ) {
+                        array_push( $array, $category );
                     }
-                    $product->categories()->sync( $categories );
+                    $product->categories()->sync( $array );
                 }
             }
 
