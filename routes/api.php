@@ -104,7 +104,7 @@ Route::group( ['middleware' => ['auth:sanctum']], function () {
          * Orders
          */
         Route::prefix( '/orders' )->group( function () {
-            Route::update( '/{order_id}', [OrderController::class, 'update'] );
+            Route::patch( '/{order_id}', [OrderController::class, 'update'] );
             Route::get( '/', [OrderController::class, 'get_all'] );
             Route::patch( '/{order_id}', [OrderController::class, 'update'] );
             Route::delete( '/{order_id}', [OrderController::class, 'delete'] );
