@@ -7,6 +7,7 @@ use App\Models\ProductCategory;
 use App\Models\UserLog;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller {
 
@@ -28,6 +29,13 @@ class ProductController extends Controller {
 
         try {
             $product = Product::create( $data );
+
+            if ( $request->hasFile( 'image' ) ) {
+                $image          = $request->file( 'image' );
+                $path           = $request->file( 'image' )->storePubliclyAs( "products/$product->id", "thumbnail." . $image->getClientOriginalExtension(), "public" );
+                $product->image = url( '/' ) . Storage::url( $path );
+                $product->save();
+            }
 
             /*
              * Assign categories

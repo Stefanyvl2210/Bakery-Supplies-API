@@ -142,7 +142,7 @@ class UserController extends Controller {
      * Get all logs
      */
     public function get_logs() {
-        return UserLog::all();
+        return UserLog::with( 'user' )->get();
     }
 
 }
