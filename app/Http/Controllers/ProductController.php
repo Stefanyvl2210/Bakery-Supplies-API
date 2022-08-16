@@ -153,6 +153,13 @@ class ProductController extends Controller {
         if ( $product ) {
             $product->update( $data );
 
+            if ( $request->hasFile( 'image' ) ) {
+                $image          = $request->file( 'image' );
+                $path           = $request->file( 'image' )->storePubliclyAs( "products/$product->id", "thumbnail." . $image->getClientOriginalExtension(), "public" );
+                $product->image = url( '/' ) . Storage::url( $path );
+                $product->save();
+            }
+
             /*
              * Assign categories
              */
